@@ -9,21 +9,28 @@ contract NFT is ERC721URIStorage {
     address public owner;
     uint256 public tokenCap;
 
-    constructor() ERC721("StarveNFT", "STA") {
+    constructor(uint256 cap) ERC721("TokenName", "SYM") {
         owner = msg.sender;
-        tokenCap = 100;
+        tokenCap = cap;
     }
 
     function transferOwnership(address newOwner) public returns (bool) {
         require(msg.sender == owner, "NFT : caller must owner");
-        require(newOwner != address(0), "NFT : newOwner should not be address(0)");
+        require(
+            newOwner != address(0),
+            "NFT : newOwner should not be address(0)"
+        );
 
         owner = newOwner;
 
         return true;
     }
 
-    function createToken(address account, uint256 tokenId, string memory tokenURI) public returns (uint) {
+    function createToken(
+        address account,
+        uint256 tokenId,
+        string memory tokenURI
+    ) public returns (uint256) {
         require(msg.sender == owner, "NFT : only owner can create NFT");
         require(tokenId != 0, "NFT : tokenId starts 1");
         require(tokenId <= tokenCap, "NFT : too many token. tokenCap is 100");
@@ -33,10 +40,12 @@ contract NFT is ERC721URIStorage {
         return tokenId;
     }
 
-    function burnToken(uint256 tokenId) public returns (uint) {
-        require(msg.sender == ownerOf(tokenId), "NFT : cannot burn other's token");
+    function burnToken(uint256 tokenId) public returns (uint256) {
+        require(
+            msg.sender == ownerOf(tokenId),
+            "NFT : cannot burn other's token"
+        );
         _burn(tokenId);
         return tokenId;
     }
-
 }
